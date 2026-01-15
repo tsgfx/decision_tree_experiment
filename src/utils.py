@@ -120,3 +120,27 @@ def plot_and_save(df_main, df_cv, x_col, dataset_name, figures_dir, mode="depth"
     plt.savefig(os.path.join(figures_dir, filename), bbox_inches="tight")
     plt.close()
     print(f"图表已保存: {filename}")
+
+
+def plot_complexity_gap(df, dataset_name, figures_dir):
+    '''
+    绘制 复杂度 vs 泛化差距 散点图 (对应论文图5-图7)
+    X轴: 节点数 (node_count)
+    Y轴: 泛化差距 (train_acc - test_acc)
+    '''
+    # 计算泛化差距
+    df["gap"] = df["train_acc"] - df["test_acc"]
+
+    plt.figure(figsize=(6.5, 4.2), dpi=200)
+    plt.scatter(df["node_count"], df["gap"], s=50, alpha=0.9)
+
+    plt.xlabel("Node Count")
+    plt.ylabel("Generalization Gap (Train - Test Acc)")
+    plt.title(f"{dataset_name}: Complexity vs Gap (by Depth Sweep)")
+    plt.grid(alpha=0.3)
+    plt.tight_layout()
+
+    filename = f"{dataset_name}_complexity_gap.png"
+    plt.savefig(os.path.join(figures_dir, filename), bbox_inches="tight")
+    plt.close()
+    print(f"图表已保存: {filename} (复杂度散点图)")

@@ -1,6 +1,6 @@
 import os
 from sklearn.datasets import load_breast_cancer
-from utils import ensure_dirs, run_depth_sweep, run_leaf_sweep, cv_accuracy, plot_and_save
+from utils import ensure_dirs, run_depth_sweep, run_leaf_sweep, cv_accuracy, plot_and_save, plot_complexity_gap
 
 
 def main():
@@ -24,7 +24,10 @@ def main():
     cv_depth.to_csv(os.path.join(tables_dir, f"{name}_cv_depth.csv"), index=False)
     plot_and_save(df_depth, cv_depth, "max_depth", name, figures_dir, mode="depth")
 
-    # 4. 运行宽度扫掠 (Width/Leaf Sweep)
+    # 4. 复杂度散点图
+    plot_complexity_gap(df_depth, name, figures_dir)
+
+    # 5. 运行宽度扫掠 (Width/Leaf Sweep)
     print("运行宽度扫掠...")
     df_leaf = run_leaf_sweep(X, y)
     leaf_settings = [{"max_leaf_nodes": L} for L in (2, 4, 8, 16, 32, 64, 128, 256)]
